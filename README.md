@@ -1,6 +1,6 @@
 # FoodLoop — Surplus Food Rescue & Redistribution Tracker
 
-> Built for [Hackathon 2026] · Odoo Community 19.0 module
+> Built as part of the Odoo Innovation Challenge conducted by Engineers Australia Society/UOWD Tech Club in collaboration with Odoo.
 
 FoodLoop is a custom Odoo module that digitises the entire chain-of-custody for surplus food — from a donor logging a listing, to a charity claiming it, to a driver picking it up and delivering it, to impact metrics being recorded automatically. Built to address the UAE's AED 6 billion annual food waste crisis.
 
