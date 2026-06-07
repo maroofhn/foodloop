@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Window action -->
+    <record id="action_food_surplus_listing" model="ir.actions.act_window">
+        <field name="name">Food Surplus Listings</field>
+        <field name="res_model">food.surplus.listing</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first surplus food listing
+            </p>
+            <p>
+                Track surplus food from donors, claim it for charities,
+                and measure the impact you make.
+            </p>
+        </field>
+    </record>
+
+    <!-- Search view -->
+    <record id="view_food_surplus_listing_search" model="ir.ui.view">
+        <field name="name">food.surplus.listing.search</field>
+        <field name="model">food.surplus.listing</field>
+        <field name="arch" type="xml">
+            <search string="Search Listings">
+                <field name="name"/>
+                <field name="reference"/>
+                <field name="donor_id"/>
+                <field name="charity_id"/>
+                <field name="driver_id"/>
+                <filter name="urgent" string="Urgent" domain="[('priority', '=', '1')]"/>
+                <filter name="expiring" string="Expiring Soon" domain="[('is_expiring', '=', True)]"/>
+                <separator/>
+                <filter name="listed" string="Listed" domain="[('state', '=', 'listed')]"/>
+                <filter name="claimed" string="Claimed" domain="[('state', '=', 'claimed')]"/>
+                <filter name="in_transit" string="In Transit" domain="[('state', '=', 'picked_up')]"/>
+                <filter name="delivered" string="Delivered" domain="[('state', '=', 'delivered')]"/>
+                <group>
+                    <filter name="group_state" string="Status" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter name="group_donor" string="Donor" domain="[]" context="{'group_by': 'donor_id'}"/>
+                    <filter name="group_charity" string="Charity" domain="[]" context="{'group_by': 'charity_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Kanban view -->
+    <record id="view_food_surplus_listing_kanban" model="ir.ui.view">
+        <field name="name">food.surplus.listing.kanban</field>
+        <field name="model">food.surplus.listing</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" records_draggable="1" groups_draggable="0"
+                    highlight_color="color" quick_create="false">
+                <field name="name"/>
+                <field name="reference"/>
+                <field name="donor_id"/>
+                <field name="charity_id"/>
+                <field name="total_meals"/>
+                <field name="total_kg"/>
+                <field name="co2_saved_kg"/>
+                <field name="priority"/>
+                <field name="is_expiring"/>
+                <field name="color"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="card">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <small class="text-muted"><field name="reference"/></small>
+                                <span t-if="record.is_expiring.raw_value" class="badge text-bg-danger">
+                                    Expiring
+                                </span>
+                                <span t-if="record.priority.raw_value == '1'" class="badge text-bg-warning">
+                                    Urgent
+                                </span>
+                            </div>
+                            <strong class="o_kanban_record_title">
+                                <field name="name"/>
+                            </strong>
+                            <div class="text-muted mt-1" t-if="record.donor_id.value">
+                                <i class="fa fa-building-o me-1" title="Donor"/>
+                                <field name="donor_id"/>
+                            </div>
+                            <div class="text-muted" t-if="record.charity_id.value">
+                                <i class="fa fa-heart-o me-1" title="Charity"/>
+                                <field name="charity_id"/>
+                            </div>
+                            <div class="d-flex justify-content-between mt-2 pt-2 border-top">
+                                <span title="Meals">
+                                    <i class="fa fa-cutlery me-1 text-primary"/>
+                                    <field name="total_meals"/>
+                                </span>
+                                <span title="Kilograms rescued">
+                                    <i class="fa fa-balance-scale me-1 text-info"/>
+                                    <field name="total_kg"/> kg
+                                </span>
+                                <span title="CO2 saved" class="text-success">
+                                    <i class="fa fa-leaf me-1"/>
+                                    <field name="co2_saved_kg"/> kg
+                                </span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- List view -->
+    <record id="view_food_surplus_listing_list" model="ir.ui.view">
+        <field name="name">food.surplus.listing.list</field>
+        <field name="model">food.surplus.listing</field>
+        <field name="arch" type="xml">
+            <list string="Surplus Listings"
+                  decoration-danger="is_expiring == True"
+                  decoration-muted="state == 'closed'">
+                <field name="reference"/>
+                <field name="name"/>
+                <field name="donor_id"/>
+                <field name="charity_id"/>
+                <field name="available_from"/>
+                <field name="is_expiring" column_invisible="1"/>
+                <field name="total_meals" sum="Meals"/>
+                <field name="total_kg" sum="Kg"/>
+                <field name="co2_saved_kg" sum="CO2 (kg)"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'listed'"
+                       decoration-warning="state in ('claimed', 'picked_up')"
+                       decoration-success="state == 'delivered'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form view -->
+    <record id="view_food_surplus_listing_form" model="ir.ui.view">
+        <field name="name">food.surplus.listing.form</field>
+        <field name="model">food.surplus.listing</field>
+        <field name="arch" type="xml">
+            <form string="Surplus Listing">
+                <header>
+                    <button name="action_claim" string="Claim" type="object"
+                            class="btn-primary" invisible="state != 'listed'"/>
+                    <button name="action_pick_up" string="Pick Up" type="object"
+                            class="btn-primary" invisible="state != 'claimed'"/>
+                    <button name="action_deliver" string="Deliver" type="object"
+                            class="btn-primary" invisible="state != 'picked_up'"/>
+                    <button name="action_close" string="Close" type="object"
+                            class="btn-primary" invisible="state != 'delivered'"/>
+                    <button name="action_reset" string="Back to Listed" type="object"
+                            invisible="state == 'listed'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" icon="fa-cutlery" disabled="1">
+                            <field name="total_meals" widget="statinfo" string="Meals"/>
+                        </button>
+                        <button class="oe_stat_button" icon="fa-balance-scale" disabled="1">
+                            <field name="total_kg" widget="statinfo" string="Kg Rescued"/>
+                        </button>
+                        <button class="oe_stat_button" icon="fa-leaf" disabled="1">
+                            <field name="co2_saved_kg" widget="statinfo" string="CO2 Saved (kg)"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Expiring Soon" bg_color="text-bg-danger"
+                            invisible="not is_expiring"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Friday buffet surplus"/>
+                        </h1>
+                        <field name="reference" readonly="1"/>
+                    </div>
+                    <group>
+                        <group string="Partners">
+                            <field name="donor_id"/>
+                            <field name="charity_id"/>
+                            <field name="driver_id"/>
+                        </group>
+                        <group string="Schedule">
+                            <field name="available_from"/>
+                            <field name="best_before"/>
+                            <field name="priority" widget="radio" options="{'horizontal': True}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Items">
+                            <field name="line_ids" editable="bottom">
+                                <list>
+                                    <field name="product_id"/>
+                                    <field name="meal_count"/>
+                                    <field name="weight_kg"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes">
+                            <field name="notes" placeholder="Any extra details for the driver or charity..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Donors (hotels / restaurants) -->
+    <record id="partner_donor_grand_plaza" model="res.partner">
+        <field name="name">Grand Plaza Hotel</field>
+        <field name="is_company" eval="True"/>
+        <field name="city">Downtown</field>
+    </record>
+    <record id="partner_donor_olive_bistro" model="res.partner">
+        <field name="name">Olive Garden Bistro</field>
+        <field name="is_company" eval="True"/>
+        <field name="city">Riverside</field>
+    </record>
+    <record id="partner_donor_sunrise_bakery" model="res.partner">
+        <field name="name">Sunrise Bakery</field>
+        <field name="is_company" eval="True"/>
+        <field name="city">Old Town</field>
+    </record>
+
+    <!-- Charities -->
+    <record id="partner_charity_hope_kitchen" model="res.partner">
+        <field name="name">Hope Kitchen</field>
+        <field name="is_company" eval="True"/>
+        <field name="city">Eastside</field>
+    </record>
+    <record id="partner_charity_food_bank" model="res.partner">
+        <field name="name">City Food Bank</field>
+        <field name="is_company" eval="True"/>
+        <field name="city">Midtown</field>
+    </record>
+    <record id="partner_charity_shelter" model="res.partner">
+        <field name="name">Shelter Together</field>
+        <field name="is_company" eval="True"/>
+        <field name="city">Westend</field>
+    </record>
+
+    <!-- Volunteer drivers -->
+    <record id="partner_driver_sam" model="res.partner">
+        <field name="name">Sam Rivera</field>
+    </record>
+    <record id="partner_driver_priya" model="res.partner">
+        <field name="name">Priya Patel</field>
+    </record>
+
+    <!-- Food products -->
+    <record id="product_cooked_rice" model="product.product">
+        <field name="name">Cooked Rice</field>
+    </record>
+    <record id="product_fresh_bread" model="product.product">
+        <field name="name">Fresh Bread</field>
+    </record>
+    <record id="product_mixed_veg" model="product.product">
+        <field name="name">Mixed Vegetables</field>
+    </record>
+    <record id="product_pastries" model="product.product">
+        <field name="name">Assorted Pastries</field>
+    </record>
+    <record id="product_soup" model="product.product">
+        <field name="name">Vegetable Soup</field>
+    </record>
+
+    <!-- Listing 1: urgent + expiring, still listed -->
+    <record id="listing_1" model="food.surplus.listing">
+        <field name="name">Friday buffet surplus</field>
+        <field name="donor_id" ref="partner_donor_grand_plaza"/>
+        <field name="priority">1</field>
+        <field name="available_from" eval="(datetime.today())"/>
+        <field name="best_before" eval="(datetime.today())"/>
+        <field name="notes">Hot food, needs collecting before closing tonight.</field>
+    </record>
+    <record id="listing_1_line_1" model="food.surplus.line">
+        <field name="listing_id" ref="listing_1"/>
+        <field name="product_id" ref="product_cooked_rice"/>
+        <field name="meal_count">40</field>
+        <field name="weight_kg">12.0</field>
+    </record>
+    <record id="listing_1_line_2" model="food.surplus.line">
+        <field name="listing_id" ref="listing_1"/>
+        <field name="product_id" ref="product_mixed_veg"/>
+        <field name="meal_count">25</field>
+        <field name="weight_kg">8.0</field>
+    </record>
+
+    <!-- Listing 2: fresh listing -->
+    <record id="listing_2" model="food.surplus.listing">
+        <field name="name">Morning bakery leftovers</field>
+        <field name="donor_id" ref="partner_donor_sunrise_bakery"/>
+        <field name="available_from" eval="(datetime.today())"/>
+        <field name="best_before" eval="(datetime.today() + relativedelta(days=2))"/>
+    </record>
+    <record id="listing_2_line_1" model="food.surplus.line">
+        <field name="listing_id" ref="listing_2"/>
+        <field name="product_id" ref="product_fresh_bread"/>
+        <field name="meal_count">30</field>
+        <field name="weight_kg">6.0</field>
+    </record>
+    <record id="listing_2_line_2" model="food.surplus.line">
+        <field name="listing_id" ref="listing_2"/>
+        <field name="product_id" ref="product_pastries"/>
+        <field name="meal_count">20</field>
+        <field name="weight_kg">4.5</field>
+    </record>
+
+    <!-- Listing 3: claimed by a charity -->
+    <record id="listing_3" model="food.surplus.listing">
+        <field name="name">Lunch service extras</field>
+        <field name="donor_id" ref="partner_donor_olive_bistro"/>
+        <field name="charity_id" ref="partner_charity_hope_kitchen"/>
+        <field name="state">claimed</field>
+        <field name="available_from" eval="(datetime.today())"/>
+        <field name="best_before" eval="(datetime.today() + relativedelta(days=1))"/>
+    </record>
+    <record id="listing_3_line_1" model="food.surplus.line">
+        <field name="listing_id" ref="listing_3"/>
+        <field name="product_id" ref="product_soup"/>
+        <field name="meal_count">35</field>
+        <field name="weight_kg">14.0</field>
+    </record>
+
+    <!-- Listing 4: picked up, on the road -->
+    <record id="listing_4" model="food.surplus.listing">
+        <field name="name">Conference catering surplus</field>
+        <field name="donor_id" ref="partner_donor_grand_plaza"/>
+        <field name="charity_id" ref="partner_charity_food_bank"/>
+        <field name="driver_id" ref="partner_driver_sam"/>
+        <field name="state">picked_up</field>
+        <field name="available_from" eval="(datetime.today() - relativedelta(days=1))"/>
+    </record>
+    <record id="listing_4_line_1" model="food.surplus.line">
+        <field name="listing_id" ref="listing_4"/>
+        <field name="product_id" ref="product_cooked_rice"/>
+        <field name="meal_count">50</field>
+        <field name="weight_kg">18.0</field>
+    </record>
+    <record id="listing_4_line_2" model="food.surplus.line">
+        <field name="listing_id" ref="listing_4"/>
+        <field name="product_id" ref="product_mixed_veg"/>
+        <field name="meal_count">30</field>
+        <field name="weight_kg">10.0</field>
+    </record>
+
+    <!-- Listing 5: delivered -->
+    <record id="listing_5" model="food.surplus.listing">
+        <field name="name">Weekend brunch surplus</field>
+        <field name="donor_id" ref="partner_donor_olive_bistro"/>
+        <field name="charity_id" ref="partner_charity_shelter"/>
+        <field name="driver_id" ref="partner_driver_priya"/>
+        <field name="state">delivered</field>
+        <field name="available_from" eval="(datetime.today() - relativedelta(days=2))"/>
+    </record>
+    <record id="listing_5_line_1" model="food.surplus.line">
+        <field name="listing_id" ref="listing_5"/>
+        <field name="product_id" ref="product_fresh_bread"/>
+        <field name="meal_count">22</field>
+        <field name="weight_kg">5.0</field>
+    </record>
+
+    <!-- Listing 6: closed and done -->
+    <record id="listing_6" model="food.surplus.listing">
+        <field name="name">Holiday dinner leftovers</field>
+        <field name="donor_id" ref="partner_donor_grand_plaza"/>
+        <field name="charity_id" ref="partner_charity_hope_kitchen"/>
+        <field name="driver_id" ref="partner_driver_sam"/>
+        <field name="state">closed</field>
+        <field name="available_from" eval="(datetime.today() - relativedelta(days=5))"/>
+    </record>
+    <record id="listing_6_line_1" model="food.surplus.line">
+        <field name="listing_id" ref="listing_6"/>
+        <field name="product_id" ref="product_soup"/>
+        <field name="meal_count">45</field>
+        <field name="weight_kg">16.0</field>
+    </record>
+    <record id="listing_6_line_2" model="food.surplus.line">
+        <field name="listing_id" ref="listing_6"/>
+        <field name="product_id" ref="product_pastries"/>
+        <field name="meal_count">28</field>
+        <field name="weight_kg">6.5</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Extra demo data: every listing below has its own unique      -->
+    <!-- donor, charity, driver and food items.                       -->
+    <!-- ============================================================ -->
+
+    <!-- More donors (restaurants / hotels) -->
+    <record id="partner_donor_copper_pot" model="res.partner">
+        <field name="name">The Copper Pot</field>
+        <field name="is_company" eval="True"/>
+        <field name="city">Lakeside</field>
+    </record>
+    <record id="partner_donor_saffron_lounge" model="res.partner">
+        <field name="name">Saffron Lounge</field>
+        <field name="is_company" eval="True"/>
+        <field name="city">Hilltop</field>
+    </record>
+    <record id="partner_donor_harbor_grill" model="res.partner">
+        <field name="name">Harbor View Grill</field>
+        <field name="is_company" eval="True"/>
+        <field name="city">Marina</field>
+    </record>
+    <record id="partner_donor_bella_napoli" model="res.partner">
+        <field name="name">Bella Napoli Pizzeria</field>
+        <field name="is_company" eval="True"/>
+        <field name="city">Little Italy</field>
+    </record>
+    <record id="partner_donor_green_fork" model="res.partner">
+        <field name="name">Green Fork Cafe</field>
+        <field name="is_company" eval="True"/>
+        <field name="city">Garden District</field>
+    </record>
+    <record id="partner_donor_tandoori_nights" model="res.partner">
+        <field name="name">Tandoori Nights</field>
+        <field name="is_company" eval="True"/>
+        <field name="city">Spice Quarter</field>
+    </record>
+    <record id="partner_donor_maple_diner" model="res.partner">
+        <field name="name">The Maple Diner</field>
+        <field name="is_company" eval="True"/>
+        <field name="city">Northgate</field>
+    </record>
+    <record id="partner_donor_ocean_breeze" model="res.partner">
+        <field name="name">Ocean Breeze Resort</field>
+        <field name="is_company" eval="True"/>
+        <field name="city">Bayfront</field>
+    </record>
+
+    <!-- More charities -->
+    <record id="partner_charity_helping_hands" model="res.partner">
+        <field name="name">Helping Hands Trust</field>
+        <field name="is_company" eval="True"/>
+        <field name="city">Parkview</field>
+    </record>
+    <record id="partner_charity_open_door" model="res.partner">
+        <field name="name">Open Door Mission</field>
+        <field name="is_company" eval="True"/>
+        <field name="city">Southbank</field>
+    </record>
+    <record id="partner_charity_loaves_fishes" model="res.partner">
+        <field name="name">Loaves &amp; Fishes</field>
+        <field name="is_company" eval="True"/>
+        <field name="city">Crossroads</field>
+    </record>
+    <record id="partner_charity_sunshine_center" model="res.partner">
+        <field name="name">Sunshine Community Center</field>
+        <field name="is_company" eval="True"/>
+        <field name="city">Brightfield</field>
+    </record>
+    <record id="partner_charity_neighbours" model="res.partner">
+        <field name="name">Neighbours In Need</field>
+        <field name="is_company" eval="True"/>
+        <field name="city">Elmwood</field>
+    </record>
+    <record id="partner_charity_warm_plate" model="res.partner">
+        <field name="name">Warm Plate Project</field>
+        <field name="is_company" eval="True"/>
+        <field name="city">Fairmount</field>
+    </record>
+    <record id="partner_charity_grace_outreach" model="res.partner">
+        <field name="name">Grace Outreach</field>
+        <field name="is_company" eval="True"/>
+        <field name="city">Kingsway</field>
+    </record>
+    <record id="partner_charity_riverside_refuge" model="res.partner">
+        <field name="name">Riverside Refuge</field>
+        <field name="is_company" eval="True"/>
+        <field name="city">Riverbend</field>
+    </record>
+
+    <!-- More volunteer drivers -->
+    <record id="partner_driver_diego" model="res.partner">
+        <field name="name">Diego Morales</field>
+    </record>
+    <record id="partner_driver_aisha" model="res.partner">
+        <field name="name">Aisha Khan</field>
+    </record>
+    <record id="partner_driver_tom" model="res.partner">
+        <field name="name">Tom Becker</field>
+    </record>
+    <record id="partner_driver_lena" model="res.partner">
+        <field name="name">Lena Schmidt</field>
+    </record>
+
+    <!-- More food products (unique per listing) -->
+    <record id="product_roast_chicken" model="product.product">
+        <field name="name">Roast Chicken</field>
+    </record>
+    <record id="product_garden_salad" model="product.product">
+        <field name="name">Garden Salad</field>
+    </record>
+    <record id="product_lentil_curry" model="product.product">
+        <field name="name">Lentil Curry</field>
+    </record>
+    <record id="product_naan_bread" model="product.product">
+        <field name="name">Naan Bread</field>
+    </record>
+    <record id="product_grilled_salmon" model="product.product">
+        <field name="name">Grilled Salmon</field>
+    </record>
+    <record id="product_steamed_rice" model="product.product">
+        <field name="name">Steamed Rice</field>
+    </record>
+    <record id="product_margherita_pizza" model="product.product">
+        <field name="name">Margherita Pizza</field>
+    </record>
+    <record id="product_garlic_knots" model="product.product">
+        <field name="name">Garlic Knots</field>
+    </record>
+    <record id="product_veggie_wraps" model="product.product">
+        <field name="name">Veggie Wraps</field>
+    </record>
+    <record id="product_fruit_bowl" model="product.product">
+        <field name="name">Fresh Fruit Bowl</field>
+    </record>
+    <record id="product_butter_chicken" model="product.product">
+        <field name="name">Butter Chicken</field>
+    </record>
+    <record id="product_basmati_rice" model="product.product">
+        <field name="name">Basmati Rice</field>
+    </record>
+    <record id="product_beef_stew" model="product.product">
+        <field name="name">Beef Stew</field>
+    </record>
+    <record id="product_dinner_rolls" model="product.product">
+        <field name="name">Dinner Rolls</field>
+    </record>
+    <record id="product_seafood_paella" model="product.product">
+        <field name="name">Seafood Paella</field>
+    </record>
+    <record id="product_mixed_greens" model="product.product">
+        <field name="name">Mixed Greens</field>
+    </record>
+
+    <!-- Listing 7: urgent, expiring, just listed -->
+    <record id="listing_7" model="food.surplus.listing">
+        <field name="name">Sunday roast surplus</field>
+        <field name="donor_id" ref="partner_donor_copper_pot"/>
+        <field name="priority">1</field>
+        <field name="available_from" eval="(datetime.today())"/>
+        <field name="best_before" eval="(datetime.today())"/>
+        <field name="notes">Trays of roast still warm, collect this evening.</field>
+    </record>
+    <record id="listing_7_line_1" model="food.surplus.line">
+        <field name="listing_id" ref="listing_7"/>
+        <field name="product_id" ref="product_roast_chicken"/>
+        <field name="meal_count">38</field>
+        <field name="weight_kg">11.5</field>
+    </record>
+    <record id="listing_7_line_2" model="food.surplus.line">
+        <field name="listing_id" ref="listing_7"/>
+        <field name="product_id" ref="product_garden_salad"/>
+        <field name="meal_count">20</field>
+        <field name="weight_kg">4.0</field>
+    </record>
+
+    <!-- Listing 8: fresh listing -->
+    <record id="listing_8" model="food.surplus.listing">
+        <field name="name">Curry house evening extras</field>
+        <field name="donor_id" ref="partner_donor_saffron_lounge"/>
+        <field name="available_from" eval="(datetime.today())"/>
+        <field name="best_before" eval="(datetime.today() + relativedelta(days=2))"/>
+        <field name="notes">Mild curries, vegetarian friendly.</field>
+    </record>
+    <record id="listing_8_line_1" model="food.surplus.line">
+        <field name="listing_id" ref="listing_8"/>
+        <field name="product_id" ref="product_lentil_curry"/>
+        <field name="meal_count">42</field>
+        <field name="weight_kg">15.0</field>
+    </record>
+    <record id="listing_8_line_2" model="food.surplus.line">
+        <field name="listing_id" ref="listing_8"/>
+        <field name="product_id" ref="product_naan_bread"/>
+        <field name="meal_count">30</field>
+        <field name="weight_kg">5.5</field>
+    </record>
+
+    <!-- Listing 9: claimed -->
+    <record id="listing_9" model="food.surplus.listing">
+        <field name="name">Seafood lunch leftovers</field>
+        <field name="donor_id" ref="partner_donor_harbor_grill"/>
+        <field name="charity_id" ref="partner_charity_helping_hands"/>
+        <field name="state">claimed</field>
+        <field name="available_from" eval="(datetime.today())"/>
+        <field name="best_before" eval="(datetime.today() + relativedelta(days=1))"/>
+        <field name="notes">Keep chilled, fish dishes.</field>
+    </record>
+    <record id="listing_9_line_1" model="food.surplus.line">
+        <field name="listing_id" ref="listing_9"/>
+        <field name="product_id" ref="product_grilled_salmon"/>
+        <field name="meal_count">26</field>
+        <field name="weight_kg">9.5</field>
+    </record>
+    <record id="listing_9_line_2" model="food.surplus.line">
+        <field name="listing_id" ref="listing_9"/>
+        <field name="product_id" ref="product_steamed_rice"/>
+        <field name="meal_count">26</field>
+        <field name="weight_kg">7.0</field>
+    </record>
+
+    <!-- Listing 10: claimed, urgent -->
+    <record id="listing_10" model="food.surplus.listing">
+        <field name="name">Pizzeria closing batch</field>
+        <field name="donor_id" ref="partner_donor_bella_napoli"/>
+        <field name="charity_id" ref="partner_charity_open_door"/>
+        <field name="priority">1</field>
+        <field name="state">claimed</field>
+        <field name="available_from" eval="(datetime.today())"/>
+        <field name="best_before" eval="(datetime.today())"/>
+        <field name="notes">Whole pizzas boxed and ready.</field>
+    </record>
+    <record id="listing_10_line_1" model="food.surplus.line">
+        <field name="listing_id" ref="listing_10"/>
+        <field name="product_id" ref="product_margherita_pizza"/>
+        <field name="meal_count">48</field>
+        <field name="weight_kg">13.0</field>
+    </record>
+    <record id="listing_10_line_2" model="food.surplus.line">
+        <field name="listing_id" ref="listing_10"/>
+        <field name="product_id" ref="product_garlic_knots"/>
+        <field name="meal_count">24</field>
+        <field name="weight_kg">3.5</field>
+    </record>
+
+    <!-- Listing 11: picked up, on the road -->
+    <record id="listing_11" model="food.surplus.listing">
+        <field name="name">Cafe daily surplus</field>
+        <field name="donor_id" ref="partner_donor_green_fork"/>
+        <field name="charity_id" ref="partner_charity_loaves_fishes"/>
+        <field name="driver_id" ref="partner_driver_diego"/>
+        <field name="state">picked_up</field>
+        <field name="available_from" eval="(datetime.today() - relativedelta(days=1))"/>
+        <field name="notes">Healthy options, easy to portion.</field>
+    </record>
+    <record id="listing_11_line_1" model="food.surplus.line">
+        <field name="listing_id" ref="listing_11"/>
+        <field name="product_id" ref="product_veggie_wraps"/>
+        <field name="meal_count">33</field>
+        <field name="weight_kg">7.5</field>
+    </record>
+    <record id="listing_11_line_2" model="food.surplus.line">
+        <field name="listing_id" ref="listing_11"/>
+        <field name="product_id" ref="product_fruit_bowl"/>
+        <field name="meal_count">18</field>
+        <field name="weight_kg">6.0</field>
+    </record>
+
+    <!-- Listing 12: picked up -->
+    <record id="listing_12" model="food.surplus.listing">
+        <field name="name">Tandoori dinner surplus</field>
+        <field name="donor_id" ref="partner_donor_tandoori_nights"/>
+        <field name="charity_id" ref="partner_charity_sunshine_center"/>
+        <field name="driver_id" ref="partner_driver_aisha"/>
+        <field name="state">picked_up</field>
+        <field name="available_from" eval="(datetime.today() - relativedelta(days=1))"/>
+        <field name="notes">Spiced dishes, large trays.</field>
+    </record>
+    <record id="listing_12_line_1" model="food.surplus.line">
+        <field name="listing_id" ref="listing_12"/>
+        <field name="product_id" ref="product_butter_chicken"/>
+        <field name="meal_count">44</field>
+        <field name="weight_kg">16.5</field>
+    </record>
+    <record id="listing_12_line_2" model="food.surplus.line">
+        <field name="listing_id" ref="listing_12"/>
+        <field name="product_id" ref="product_basmati_rice"/>
+        <field name="meal_count">44</field>
+        <field name="weight_kg">9.0</field>
+    </record>
+
+    <!-- Listing 13: delivered -->
+    <record id="listing_13" model="food.surplus.listing">
+        <field name="name">Diner comfort food run</field>
+        <field name="donor_id" ref="partner_donor_maple_diner"/>
+        <field name="charity_id" ref="partner_charity_neighbours"/>
+        <field name="driver_id" ref="partner_driver_tom"/>
+        <field name="state">delivered</field>
+        <field name="available_from" eval="(datetime.today() - relativedelta(days=2))"/>
+        <field name="notes">Hearty meals, delivered warm.</field>
+    </record>
+    <record id="listing_13_line_1" model="food.surplus.line">
+        <field name="listing_id" ref="listing_13"/>
+        <field name="product_id" ref="product_beef_stew"/>
+        <field name="meal_count">36</field>
+        <field name="weight_kg">14.5</field>
+    </record>
+    <record id="listing_13_line_2" model="food.surplus.line">
+        <field name="listing_id" ref="listing_13"/>
+        <field name="product_id" ref="product_dinner_rolls"/>
+        <field name="meal_count">40</field>
+        <field name="weight_kg">5.0</field>
+    </record>
+
+    <!-- Listing 14: closed and done -->
+    <record id="listing_14" model="food.surplus.listing">
+        <field name="name">Resort banquet surplus</field>
+        <field name="donor_id" ref="partner_donor_ocean_breeze"/>
+        <field name="charity_id" ref="partner_charity_grace_outreach"/>
+        <field name="driver_id" ref="partner_driver_lena"/>
+        <field name="state">closed</field>
+        <field name="available_from" eval="(datetime.today() - relativedelta(days=4))"/>
+        <field name="notes">Large banquet, fed many families.</field>
+    </record>
+    <record id="listing_14_line_1" model="food.surplus.line">
+        <field name="listing_id" ref="listing_14"/>
+        <field name="product_id" ref="product_seafood_paella"/>
+        <field name="meal_count">55</field>
+        <field name="weight_kg">20.0</field>
+    </record>
+    <record id="listing_14_line_2" model="food.surplus.line">
+        <field name="listing_id" ref="listing_14"/>
+        <field name="product_id" ref="product_mixed_greens"/>
+        <field name="meal_count">30</field>
+        <field name="weight_kg">7.5</field>
+    </record>
+
+</odoo>

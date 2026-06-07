@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_foodloop_root"
+              name="FoodLoop"
+              sequence="10"/>
+
+    <menuitem id="menu_foodloop_listings"
+              name="Listings"
+              parent="menu_foodloop_root"
+              action="action_food_surplus_listing"
+              sequence="10"/>
+
+</odoo>

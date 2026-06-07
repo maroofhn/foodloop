@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="seq_food_surplus_listing" model="ir.sequence">
+        <field name="name">Food Surplus Listing</field>
+        <field name="code">food.surplus.listing</field>
+        <field name="prefix">FL/</field>
+        <field name="padding">4</field>
+    </record>
+
+</odoo>
