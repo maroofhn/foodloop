@@ -58,15 +58,6 @@ FoodLoop is designed for four user types, all using the same Odoo interface but 
 
 ---
 
-## Screenshots
-
-> _Add screenshots here before submitting. Suggested shots:_
-> 1. Kanban board with all 5 columns and coloured cards
-> 2. Form view with stat buttons, expiry ribbon, and chatter
-> 3. List view with column sums (Meals, Kg, CO2)
-
----
-
 ## Tech Stack
 
 | Layer | Technology |
